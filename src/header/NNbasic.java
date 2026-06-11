@@ -1,6 +1,6 @@
 package header;
 
-public class NN {
+public class NNbasic {
     public static class Mat {
         private int rows;
         private int cols;
@@ -18,7 +18,7 @@ public class NN {
             this.cols = cols;
             this.es = es;
         }
-
+        
         public float MAT_AT(int row, int col) {
             return es[(row) * cols + (col)];
         }        
@@ -40,8 +40,8 @@ public class NN {
         }
     }
     public static void mat_dot(Mat dst, Mat a, Mat b) {
-        if (a.cols != b.rows) throw new IllegalArgumentException("Mats must have same number of columns");
-        if (dst.rows != a.rows) throw new IllegalArgumentException("Mats must have same number of columns");
+        if (a.cols != b.rows) throw new IllegalArgumentException("Mats must have same inner sizes");
+        if (dst.rows != a.rows) throw new IllegalArgumentException("Mats must have same number of rows");
         if (dst.cols != b.cols) throw new IllegalArgumentException("Mats must have same number of columns");
         int n = a.cols;
         for (int i = 0; i < dst.rows; i++) {

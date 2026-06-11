@@ -33,7 +33,7 @@ public class Gates {
         for (int i = 0; i < train_count; i++) {
             float x1 = or_train[i][0];
             float x2 = or_train[i][1];
-            float y = sigmoid((x1*w1) + (x2*w2) + b);
+            float y = sigmoid((x1*w1) + (x2*w2) + b); // sigmoid compresses the values between 0 and 1 on y-axis
             float diff = y - or_train[i][2];
             result += diff * diff;
         }

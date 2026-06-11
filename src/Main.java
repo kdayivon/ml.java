@@ -1,4 +1,4 @@
-import static header.NN.*;
+import static header.NNbasic.*;
 
 void main() {
     Mat a = new Mat(1, 2);
@@ -9,7 +9,7 @@ void main() {
     Mat b = new Mat(2, 2, id_data);
 
     System.out.println("-----------------");
-
+    IO.println(b.MAT_AT(1, 1));
     Mat dst = new Mat(1, 2);
     mat_dot(dst, a, b);
     mat_print(dst);
