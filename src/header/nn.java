@@ -1,6 +1,6 @@
 package header;
 
-public class NNbasic {
+public class nn {
     public static class Mat {
         private int rows;
         private int cols;
@@ -26,6 +26,18 @@ public class NNbasic {
         public void MAT_AT(int row, int col, float value) {
             es[(row) * cols + (col)] = value;
         }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < this.rows; i++) {
+                for (int j = 0; j < this.cols; j++) {
+                    sb.append(this.MAT_AT(i,j)).append(" ");
+                }
+                sb.append("\n");
+            }
+            return sb.toString();
+        } 
     }
 
     public static float rand_float() {
@@ -54,7 +66,7 @@ public class NNbasic {
                 }
             }
         }
-    }
+}
     public static void mat_sum(Mat dst, Mat a) {
         if (a.cols != dst.cols) throw new IllegalArgumentException("Mats must have same number of columns");
         if (a.rows != dst.rows) throw new IllegalArgumentException("Mats must have same number of rows");
@@ -74,13 +86,44 @@ public class NNbasic {
         }
     }
 
-    public static void mat_print(Mat m) {
-        for (int i = 0; i < m.rows; i++) {
-            for (int j = 0; j < m.cols; j++) {
-                System.out.printf("%f ", m.MAT_AT(i, j)); 
+
+    public static class NN {
+    int count;    // number of layers
+    Mat[] ws;     // array of weights matrices
+    Mat[] bs;     // array of bias matrices
+    Mat[] as;     // input layer
+
+    // float[] arch = {input_layer = 2, hidden = 2, output = 1}
+    // NN nn = new NN(arch, len(arch))
+        public NN(int[] arch) {
+            assert arch.length > 0: "architecture size must be bigger than 0";
+            this.count = (int) arch.length - 1;
+
+           // count = len(architecture) w/o activation layer 
+           // allloc ws = 
+            this.ws = new Mat[count];
+            this.bs = new Mat[count];
+            this.as = new Mat[count + 1];
+            
+            this.as[0] = new Mat(1, arch[0]);  // input layer
+            for (int i = 1; i < (count+1); i++) {
+                this.ws[i-1] = new Mat(arch[i-1], arch[i]);
+                this.bs[i-1] = new Mat(1, arch[i]);
+                this.as[i]   = new Mat(1, arch[i]);
             }
-            System.out.println();
         }
-    } 
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("NN = [\n");
+            for (int i = 0; i < this.count; i++) {
+               sb.append("  ws[").append(i).append("] =\n").append(ws[i]);
+               sb.append("  bs[").append(i).append("] =\n").append(bs[i]);
+            } 
+            sb.append("]\n");
+            return sb.toString();
+        }
+    }
 
 }
