@@ -1,6 +1,15 @@
 package header;
 
 public class nn {
+    public static float rand_float() {
+        return (float) Math.random();
+    }
+    
+    public static float sigmoidf(float x) {
+        float sig = (float)(1 / (1+Math.exp(-x)));
+        return sig;
+    }
+
     public static class Mat {
         private int rows;
         private int cols;
@@ -41,8 +50,23 @@ public class nn {
         } 
     }
 
-    public static float rand_float() {
-        return (float) Math.random();
+    public static Mat mat_row(Mat m, int row) {
+        float[] l = new float[m.cols];
+        for (int i = 0; i < m.cols; i++) {
+            l[i] = m.MAT_AT(row, i);
+        }
+        return new Mat(1, m.cols, l);
+    }
+
+    public static void mat_copy(Mat dst, Mat src) {
+        if (src.cols != dst.cols) throw new IllegalArgumentException("Mats must have same number of columns");
+        if (src.rows != dst.rows) throw new IllegalArgumentException("Mats must have same number of rows");
+        for (int i = 0; i < dst.rows; i++) {
+            for (int j = 0; j < dst.cols; j++) {
+                float x = src.MAT_AT(i, j);
+                dst.MAT_AT(i, j, x);
+            }
+        }
     }
 
     public static void mat_fill(Mat m, float x) {
@@ -52,6 +76,7 @@ public class nn {
             }
         }
     }
+
     public static void mat_dot(Mat dst, Mat a, Mat b) {
         if (a.cols != b.rows) throw new IllegalArgumentException("Mats must have same inner sizes");
         if (dst.rows != a.rows) throw new IllegalArgumentException("Mats must have same number of rows");
@@ -67,7 +92,8 @@ public class nn {
                 }
             }
         }
-}
+    }
+
     public static void mat_sum(Mat dst, Mat a) {
         if (a.cols != dst.cols) throw new IllegalArgumentException("Mats must have same number of columns");
         if (a.rows != dst.rows) throw new IllegalArgumentException("Mats must have same number of rows");
@@ -78,6 +104,7 @@ public class nn {
             }
         }
     }
+
     public static void mat_rand(Mat m, float low, float high) {
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
@@ -87,6 +114,14 @@ public class nn {
         }
     }
 
+    public static void mat_sig(Mat m) {
+        for (int i = 0; i < m.rows; i++) {
+            for (int j = 0; j < m.cols; j++) {
+                float x = m.MAT_AT(i, j);
+                m.MAT_AT(i, j, sigmoidf(x));
+            }
+        }
+    }
 
     public static class NN {
     int count;    // number of layers
@@ -126,5 +161,19 @@ public class nn {
             return sb.toString();
         }
     }
+    
+    public static void nn_rand(NN nn, float low, float high) {
+        for (int i = 0; i < nn.count; i++) {
+            mat_rand(nn.ws[i], low, high);
+            mat_rand(nn.bs[i], low, high);
+        } 
+    } 
 
+    public static void nn_forward(NN nn) {
+        for (int i = 0; i < nn.count; i++) {
+            mat_dot(nn.as[i+1], nn.as[i], nn.ws[i]);
+            mat_sum(nn.as[i+1], nn.bs[i]);
+            mat_sig(nn.as[i+1]);
+        } 
+    }
 }
