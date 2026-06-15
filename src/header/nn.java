@@ -31,6 +31,7 @@ public class nn {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < this.rows; i++) {
+                sb.append("     ");
                 for (int j = 0; j < this.cols; j++) {
                     sb.append(this.MAT_AT(i,j)).append(" ");
                 }
@@ -118,8 +119,8 @@ public class nn {
             StringBuilder sb = new StringBuilder();
             sb.append("NN = [\n");
             for (int i = 0; i < this.count; i++) {
-               sb.append("  ws[").append(i).append("] =\n").append(ws[i]);
-               sb.append("  bs[").append(i).append("] =\n").append(bs[i]);
+               sb.append("  ws[").append(i).append("] = [\n").append(ws[i]).append("    ]\n");
+               sb.append("  bs[").append(i).append("] = [\n").append(bs[i]).append("    ]\n");
             } 
             sb.append("]\n");
             return sb.toString();
