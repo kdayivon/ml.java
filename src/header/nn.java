@@ -13,27 +13,30 @@ public class nn {
     public static class Mat {
         private int rows;
         private int cols;
+        private int stride;
         float[] es;
 
-        public Mat(int rows, int cols) {
+        public Mat(int rows, int cols, int stride) {
             this.rows = rows;
             this.cols = cols;
+            this.stride = stride;
             this.es = new float[rows * cols];
         }
 
-        public Mat(int rows, int cols, float[] es) {
+        public Mat(int rows, int cols, int stride, float[] es) {
             assert es.length == rows * cols : "array size must match rows * cols";
             this.rows = rows;
             this.cols = cols;
+            this.stride = stride;
             this.es = es;
         }
         
         public float MAT_AT(int row, int col) {
-            return es[(row) * cols + (col)];
+            return es[(row) * stride + (col)];
         }        
 
         public void MAT_AT(int row, int col, float value) {
-            es[(row) * cols + (col)] = value;
+            es[(row) * stride + (col)] = value;
         }
 
         @Override
@@ -55,7 +58,7 @@ public class nn {
         for (int i = 0; i < m.cols; i++) {
             l[i] = m.MAT_AT(row, i);
         }
-        return new Mat(1, m.cols, l);
+        return new Mat(1, m.cols, m.stride, l);
     }
 
     public static void mat_copy(Mat dst, Mat src) {
@@ -141,11 +144,11 @@ public class nn {
             this.bs = new Mat[count];
             this.as = new Mat[count + 1];
             
-            this.as[0] = new Mat(1, arch[0]);  // input layer
+            this.as[0] = new Mat(1, arch[0], 0);  // input layer
             for (int i = 1; i < (count+1); i++) {
-                this.ws[i-1] = new Mat(arch[i-1], arch[i]);
-                this.bs[i-1] = new Mat(1, arch[i]);
-                this.as[i]   = new Mat(1, arch[i]);
+                this.ws[i-1] = new Mat(arch[i-1], arch[i], 0);
+                this.bs[i-1] = new Mat(1, arch[i], 0);
+                this.as[i]   = new Mat(1, arch[i], 0);
             }
         }
 
