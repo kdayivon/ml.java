@@ -14,6 +14,7 @@ public class nn {
         private int rows;
         private int cols;
         private int stride;
+        private int offset;
         float[] es;
 
         public Mat(int rows, int cols, int stride) {
@@ -23,20 +24,21 @@ public class nn {
             this.es = new float[rows * cols];
         }
 
-        public Mat(int rows, int cols, int stride, float[] es) {
+        public Mat(int rows, int cols, int stride, int offset, float[] es) {
             assert es.length == rows * cols : "array size must match rows * cols";
             this.rows = rows;
             this.cols = cols;
             this.stride = stride;
+            this.offset = offset;
             this.es = es;
         }
         
-        public float MAT_AT(int row, int col) {
-            return es[(row) * stride + (col)];
+        public float MAT_AT(int row, int col, int offset) {
+            return es[offset + (row) * stride + (col)];
         }        
 
-        public void MAT_AT(int row, int col, float value) {
-            es[(row) * stride + (col)] = value;
+        public void MAT_AT(int row, int col, int offset, float value) {
+            es[offset + (row) * stride + (col)] = value;
         }
 
         @Override
@@ -45,20 +47,20 @@ public class nn {
             for (int i = 0; i < this.rows; i++) {
                 sb.append("     ");
                 for (int j = 0; j < this.cols; j++) {
-                    sb.append(this.MAT_AT(i,j)).append(" ");
+                    sb.append(this.MAT_AT(i, j, this.offset)).append(" ");
                 }
                 sb.append("\n");
             }
-            return sb.toString();
+            return sb.toString(); 
         } 
     }
 
     public static Mat mat_row(Mat m, int row) {
         float[] l = new float[m.cols];
         for (int i = 0; i < m.cols; i++) {
-            l[i] = m.MAT_AT(row, i);
+            l[i] = m.MAT_AT(row, i, 0);
         }
-        return new Mat(1, m.cols, m.stride, l);
+        return new Mat(1, m.cols, m.stride, m.stride, l);
     }
 
     public static void mat_copy(Mat dst, Mat src) {
@@ -66,8 +68,8 @@ public class nn {
         if (src.rows != dst.rows) throw new IllegalArgumentException("Mats must have same number of rows");
         for (int i = 0; i < dst.rows; i++) {
             for (int j = 0; j < dst.cols; j++) {
-                float x = src.MAT_AT(i, j);
-                dst.MAT_AT(i, j, x);
+                float x = src.MAT_AT(i, j, 0);
+                dst.MAT_AT(i, j, 0, x);
             }
         }
     }
@@ -75,7 +77,7 @@ public class nn {
     public static void mat_fill(Mat m, float x) {
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
-                m.MAT_AT(i, j, x);
+                m.MAT_AT(i, j, 0, x);
             }
         }
     }
@@ -88,10 +90,10 @@ public class nn {
         for (int i = 0; i < dst.rows; i++) {
             for (int j = 0; j < dst.cols; j++) {
                 float x = 0;
-                dst.MAT_AT(i, j, x);
+                dst.MAT_AT(i, j, 0, x);
                 for (int k = 0; k < n; k++) { // iterating over the inner size i.k * k.j
-                    x += a.MAT_AT(i, k) * b.MAT_AT(k, j);
-                    dst.MAT_AT(i, j, x);
+                    x += a.MAT_AT(i, k, 0) * b.MAT_AT(k, j, 0);
+                    dst.MAT_AT(i, j, 0, x);
                 }
             }
         }
@@ -102,8 +104,8 @@ public class nn {
         if (a.rows != dst.rows) throw new IllegalArgumentException("Mats must have same number of rows");
         for (int i = 0; i < dst.rows; i++) {
             for (int j = 0; j < dst.cols; j++) {
-                float x = dst.MAT_AT(i, j) + a.MAT_AT(i, j);
-                dst.MAT_AT(i, j, x);
+                float x = dst.MAT_AT(i, j, 0) + a.MAT_AT(i, j, 0);
+                dst.MAT_AT(i, j, 0, x);
             }
         }
     }
@@ -112,7 +114,7 @@ public class nn {
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
                 float x = rand_float() * (high - low) + low;
-                m.MAT_AT(i, j, x);
+                m.MAT_AT(i, j, 0, x);
             }
         }
     }
@@ -120,8 +122,8 @@ public class nn {
     public static void mat_sig(Mat m) {
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
-                float x = m.MAT_AT(i, j);
-                m.MAT_AT(i, j, sigmoidf(x));
+                float x = m.MAT_AT(i, j, 0);
+                m.MAT_AT(i, j, 0, sigmoidf(x));
             }
         }
     }

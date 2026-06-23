@@ -9,21 +9,11 @@ void main() {
     };
 
     int n = td.length/3;
-    float[] t = {
-        0, 0,
-        0, 1,
-        1, 0,
-        1, 1,
-    };
-    float[] d = {
-        0,
-        1,
-        1,
-        0,
-    };
-    Mat ti = new Mat(n, 2, 2, t);
+    int stride = 3; 
+    int offset = 2;
+    Mat ti = new Mat(n, 2, stride, 0, td);
+    Mat to = new Mat(n, 1, stride, offset, td);
     IO.print(ti);
-    Mat to = new Mat(4, 1, 0, d);
     IO.print(to);
 
     int[] arch = {2, 2, 1};
