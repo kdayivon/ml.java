@@ -4,7 +4,7 @@ public class nn {
     public static float rand_float() {
         return (float) Math.random();
     }
-    
+
     public static float sigmoidf(float x) {
         float sig = (float)(1 / (1+Math.exp(-x)));
         return sig;
