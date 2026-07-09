@@ -6,3 +6,7 @@ out/
 bin/
 target/
 build/
+
+nn.*
+!nn.tex
+!nn.pdf
