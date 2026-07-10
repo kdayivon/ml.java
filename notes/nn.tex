@@ -126,13 +126,12 @@
         
 
     \section{Numerical Gradients}
-    The gradient of a function tells us the direction of steepest increase. In order to minimize the loss function, computing the direction
-    of the slope and moving in the opposite. \textit{Numerical gradients}, as opposed to \textit{Analytical gradients}, are simple 
-    conceptually and in implementation, but pose quite a challenge as the parameter count increases. Numerical gradients also approximate 
-    the derivative using the \textbf{Finite Difference}, where choosing an erroneous step size $h$ introduces numerical instability and
-    precision issues. 
-    Numerical Gradients work by applying a small perturbation to the parameters to each parameter and observing how much the function value 
-    changes.
+    The gradient of a function tells us the direction of steepest increase. In order to minimize the loss function, we compute the direction
+    of the slope and move in the opposite. \textit{Numerical gradients}, as opposed to \textit{Analytical gradients}, are simple 
+    conceptually and in implementation, but pose quite a challenge as the parameter count increases. Numerical gradients approximate 
+    the derivative using discrete function values rather than analytical calculus, primarly via the \textbf{Finite Difference} methods, where 
+    choosing an erroneous step size $h$ introduces numerical instability and precision issues. 
+    Numerical Gradients work by applying a small perturbation to the parameters and observing how much the function value changes. 
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.5\textwidth]{numericaldescent.png}
